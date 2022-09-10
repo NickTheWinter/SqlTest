@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.os.StrictMode;
 import android.util.Log;
 
 import java.sql.Connection;
@@ -8,17 +9,19 @@ import java.sql.Statement;
 
 public class ConnectionHelper
 {
-    String ip = "ngknn.ru", port = "1433",
+    static String ip = "ngknn.ru", port = "1433",
             database = "33П-КР-Глодин", userName = "33П", userPassword = "12357";
 
-    public void Connection()
+    public static Connection Connection()
     {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection connection = null;
         try
         {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             String ConnectionURL = "jdbc:jtds:sqlserver://" + ip + ":" + port + ";" + "databasename=" + database + ";user=" + userName + ";password=" + userPassword + ";";
-            Connection connection = DriverManager.getConnection(ConnectionURL);
-            Statement statement = connection.createStatement();
+            connection = DriverManager.getConnection(ConnectionURL);
 
 
         }
@@ -26,5 +29,6 @@ public class ConnectionHelper
         {
             Log.e("Error", ex.getMessage());            
         }
+        return connection;
     }
 }
