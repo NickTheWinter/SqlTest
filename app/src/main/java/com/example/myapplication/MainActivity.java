@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView listView = findViewById(R.id.list);
 
     }
     SimpleAdapter ad;
@@ -39,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         myDataList = MyData.getList();
 
         String[] FromTable = {"airline_id","airline_name","airline_website"};
-        int[] Tow = {R.id.TextID,R.id.TextName,R.id.TextWebsite};
+        int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite};
 
-        ad = new SimpleAdapter(MainActivity.this, myDataList,R.layout.table_list,FromTable,Tow);
+        ad = new SimpleAdapter(MainActivity.this, myDataList,R.layout.table_list,FromTable,ToView);
         listView.setAdapter(ad);
     }
     /*@SuppressLint("NewApi")

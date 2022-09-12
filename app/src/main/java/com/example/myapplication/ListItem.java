@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.util.Log;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +23,7 @@ public class ListItem {
             ConnectionHelper connectionHelper = new ConnectionHelper();
             connection = connectionHelper.Connection();
             if(connection != null){
-                String query = " Select * From airlines";
+                String query = "Select * From airlines";
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
                 while(resultSet.next()){
@@ -33,11 +35,13 @@ public class ListItem {
                 }
                 ConnectionResult = "Success";
                 isSuccess = true;
+                Log.e(ConnectionResult,"");
                 connection.close();
             }
             else
             {
                 ConnectionResult = "Failed";
+                Log.e(ConnectionResult,"");
             }
         } catch (SQLException throwables) {
 
