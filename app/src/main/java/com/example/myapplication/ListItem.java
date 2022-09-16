@@ -18,7 +18,7 @@ public class ListItem {
 
     public List<Map<String,String>> getList(){
         List<Map<String,String>> data = null;
-        data = new ArrayList<Map<String,String>>();
+        data = new ArrayList<Map <String,String>>();
         try{
             ConnectionHelper connectionHelper = new ConnectionHelper();
             connection = connectionHelper.Connection();
@@ -44,7 +44,7 @@ public class ListItem {
                 Log.e(ConnectionResult,"");
             }
         } catch (SQLException throwables) {
-
+            throwables.printStackTrace();
         }
         return data;
     }

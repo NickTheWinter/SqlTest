@@ -37,47 +37,14 @@ public class MainActivity extends AppCompatActivity {
         ListItem MyData = new ListItem();
         myDataList = MyData.getList();
 
-        String[] FromTable = {"airline_id","airline_name","airline_website"};
+        String[] FromTable = {"TextID","TextName","TextWebsite"};
         int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite};
 
         ad = new SimpleAdapter(MainActivity.this, myDataList,R.layout.table_list,FromTable,ToView);
         listView.setAdapter(ad);
     }
-    /*@SuppressLint("NewApi")
-    public void OnClick(View v)
-    {
-        TextView ID = findViewById(R.id.textID);
-        TextView Name = findViewById(R.id.textName);
-        TextView Website = findViewById(R.id.textWebsite);
-
-
-        ConnectionHelper helper = new ConnectionHelper();
-        ResultSet rs = null;
-        Connection connection;
-
-        try {
-            connection = helper.Connection();
-            if(connection != null) {
-                String query = "Select * From airlines";
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(query);
-                while (resultSet.next()){
-                    ID.setText(resultSet.getString("airline_id"));
-                    Name.setText(resultSet.getString("airline_name"));
-                    Website.setText(resultSet.getString("airline_website"));
-                }
-                ConnectionResult = "Success";
-                connection.close();
-            }
-            else{
-                ConnectionResult = "Failed";
-                Log.e(ConnectionResult,"");
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-
-    }*/
+    public void goAddPage(View v){
+        setContentView(R.layout.adding_page);
+    }
 
 }
