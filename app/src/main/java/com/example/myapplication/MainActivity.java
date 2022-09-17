@@ -3,6 +3,8 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.telecom.ConnectionRequest;
 import android.util.Log;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(ad);
     }
     public void goAddPage(View v){
-        setContentView(R.layout.adding_page);
+        startActivity(new Intent(MainActivity.this,AddPage.class));
+
     }
 
 }
