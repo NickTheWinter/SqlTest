@@ -15,9 +15,10 @@ public class ListItem {
     Connection connection;
     String ConnectionResult = "";
     Boolean isSuccess = false;
+    List<Map<String,String>> data;
 
     public List<Map<String,String>> getList(){
-        List<Map<String,String>> data = null;
+        data = null;
         data = new ArrayList<Map <String,String>>();
         try{
             ConnectionHelper connectionHelper = new ConnectionHelper();

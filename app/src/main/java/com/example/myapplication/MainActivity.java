@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.telecom.ConnectionRequest;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -18,22 +19,43 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
 
+
+    ListView listView;
     String ConnectionResult = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listView = findViewById(R.id.list);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ListView listView = (ListView) adapterView;
+                try {
+                    List<Map<String,String>> item =  (List<Map<String,String>>) listView.getItemAtPosition(i);
+                }
+                catch (Exception ex){
+                    Log.e("Something goes wrong",ex.getMessage());
+                }
+
+                Intent edit_page = new Intent(MainActivity.this, EditClass.class);
+                /*edit_page.putExtra("name",item.name);
+                edit_page.putExtra("kind",item.kind);*/
+                startActivity(edit_page);
+            }
+        });
     }
     SimpleAdapter ad;
     public void GetList(View v){
-        ListView listView = (ListView)findViewById(R.id.list);
+        listView = (ListView)findViewById(R.id.list);
 
         List<Map<String,String>> myDataList = null;
         ListItem MyData = new ListItem();
