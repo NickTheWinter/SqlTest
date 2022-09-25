@@ -39,16 +39,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListView listView = (ListView) adapterView;
-                try {
-                    List<Map<String,String>> item =  (List<Map<String,String>>) listView.getItemAtPosition(i);
-                }
-                catch (Exception ex){
-                    Log.e("Something goes wrong",ex.getMessage());
-                }
+
+                HashMap item =  (HashMap)listView.getItemAtPosition(i);
 
                 Intent edit_page = new Intent(MainActivity.this, EditClass.class);
-                /*edit_page.putExtra("name",item.name);
-                edit_page.putExtra("kind",item.kind);*/
+                edit_page.putExtra("editName",item.get("TextName").toString());
+                edit_page.putExtra("editWebsite",item.get("TextWebsite").toString());
                 startActivity(edit_page);
             }
         });
