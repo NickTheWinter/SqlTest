@@ -27,7 +27,9 @@
         <activity
             android:name=".AddPage"
             android:exported="true"/>
-
+        <activity
+            android:name=".EditClass"
+            android:exported="true"/>
     </application>
 
 </manifest>

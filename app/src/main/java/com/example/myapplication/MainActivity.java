@@ -29,11 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     String ConnectionResult = "";
+    Intent edit_page;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.list);
+        edit_page = new Intent(MainActivity.this, EditClass.class);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
                 HashMap item =  (HashMap)listView.getItemAtPosition(i);
 
-                Intent edit_page = new Intent(MainActivity.this, EditClass.class);
+                edit_page.putExtra("notEditId",item.get("TextID").toString());
                 edit_page.putExtra("editName",item.get("TextName").toString());
                 edit_page.putExtra("editWebsite",item.get("TextWebsite").toString());
                 startActivity(edit_page);
