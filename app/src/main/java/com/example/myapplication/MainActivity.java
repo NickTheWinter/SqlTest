@@ -26,7 +26,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
 
-
+    View v;
     ListView listView;
     String ConnectionResult = "";
     Intent edit_page;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.list);
         edit_page = new Intent(MainActivity.this, EditClass.class);
-
+        GetList(v);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 edit_page.putExtra("notEditId",item.get("TextID").toString());
                 edit_page.putExtra("editName",item.get("TextName").toString());
                 edit_page.putExtra("editWebsite",item.get("TextWebsite").toString());
+                edit_page.putExtra("airPhoto",item.get("ItemImage").toString());
                 startActivity(edit_page);
             }
         });
@@ -59,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
         ListItem MyData = new ListItem();
         myDataList = MyData.getList();
 
-        String[] FromTable = {"TextID","TextName","TextWebsite"};
-        int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite};
+        String[] FromTable = {"TextID","TextName","TextWebsite","ItemImage"};
+        int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite,R.id.ItemImage};
 
         ad = new SimpleAdapter(MainActivity.this, myDataList,R.layout.table_list,FromTable,ToView);
         listView.setAdapter(ad);

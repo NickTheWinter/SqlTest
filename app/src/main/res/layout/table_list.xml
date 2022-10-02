@@ -6,11 +6,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/ItemImage"
+            android:layout_width="100sp"
+            android:layout_height="100sp">
+
+        </ImageView>
         <TextView
             android:id="@+id/TextID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"/>
+            android:textSize="22sp"
+            android:layout_toRightOf="@id/ItemImage"/>
         <TextView
             android:id="@+id/TextName"
             android:layout_marginLeft="10sp"
