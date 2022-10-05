@@ -38,7 +38,7 @@ public class AddPage extends AppCompatActivity {
         TextInputLayout editWebsite = findViewById(R.id.addWebsite);
         ImageView addPhoto = findViewById(R.id.addPhoto);
 
-        String encodedImage = ((EditClass)getBaseContext()).EncodeImage(((BitmapDrawable)addPhoto.getDrawable()).getBitmap());
+        String encodedImage = EncodeImage(((BitmapDrawable)addPhoto.getDrawable()).getBitmap());
         if(!editName.getEditText().getText().toString().equals("") && !editWebsite.getEditText().getText().toString().equals("")){
             try{
                 ConnectionHelper connectionHelper = new ConnectionHelper();
@@ -46,7 +46,7 @@ public class AddPage extends AppCompatActivity {
                 if(connection != null){
                     String query = "Insert Into airlines (airline_name,airline_website,image) Values ('" + editName.getEditText().getText().toString() +
                             "', '" + editWebsite.getEditText().getText().toString() +
-                            "', '" + encodedImage +"'";
+                            "', '" + encodedImage +"')";
                     Statement statement = connection.createStatement();
                     statement.executeQuery(query);
 
@@ -64,6 +64,19 @@ public class AddPage extends AppCompatActivity {
                 Log.e("Error:",throwables.getMessage());
             }
         }
+    }
+
+    public String EncodeImage(Bitmap bitmap) {
+        int prevW = 150;
+        int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();
+        Bitmap b = Bitmap.createScaledBitmap(bitmap, prevW, prevH, false);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Base64.getEncoder().encodeToString(bytes);
+        }
+        return "";
     }
 
     public void Back (View v){

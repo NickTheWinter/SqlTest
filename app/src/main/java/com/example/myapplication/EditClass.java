@@ -85,7 +85,7 @@ public class EditClass extends AppCompatActivity {
     });
 
     //Из строки в изображение
-    private Bitmap getImgBitmap(String encodedImg) {
+    public Bitmap getImgBitmap(String encodedImg) {
         if (encodedImg != null) {
             byte[] bytes = new byte[0];
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

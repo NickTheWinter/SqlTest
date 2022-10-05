@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.telecom.ConnectionRequest;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -30,11 +33,13 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     String ConnectionResult = "";
     Intent edit_page;
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.list);
+        imageView = findViewById(R.id.ItemImage);
         edit_page = new Intent(MainActivity.this, EditClass.class);
         GetList(v);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,19 +61,18 @@ public class MainActivity extends AppCompatActivity {
     public void GetList(View v){
         listView = (ListView)findViewById(R.id.list);
 
-        List<Map<String,String>> myDataList = null;
+        List<Map<Bitmap,Map<String,String>>> myDataList = null;
         ListItem MyData = new ListItem();
         myDataList = MyData.getList();
 
         String[] FromTable = {"TextID","TextName","TextWebsite","ItemImage"};
-        int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite,R.id.ItemImage};
+        int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite, R.id.ItemImage};
 
         ad = new SimpleAdapter(MainActivity.this, myDataList,R.layout.table_list,FromTable,ToView);
         listView.setAdapter(ad);
     }
     public void goAddPage(View v){
         startActivity(new Intent(MainActivity.this,AddPage.class));
-
     }
 
 }
