@@ -47,23 +47,7 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.ItemImage);
         edit_page = new Intent(MainActivity.this, EditClass.class);
         GetList(v);
-
-        //listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /*@Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ListView listView = (ListView) adapterView;
-
-                HashMap item =  (HashMap)listView.getItemAtPosition(i);
-
-                edit_page.putExtra("notEditId",item.get("TextID").toString());
-                edit_page.putExtra("editName",item.get("TextName").toString());
-                edit_page.putExtra("editWebsite",item.get("TextWebsite").toString());
-                edit_page.putExtra("airPhoto",item.get("ItemImage").toString());
-                startActivity(edit_page);
-            }
-        });*/
     }
-    SimpleAdapter ad;
     public void GetList(View v){
         listView = (ListView)findViewById(R.id.list);
 
@@ -73,7 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
         profileAdapter = new ProfileAdapter(MainActivity.this,myDataList);
         listView.setAdapter(profileAdapter);
-        listView.setOnItemClickListener((parent, view, position, id) ->{
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        //listView.setOnItemClickListener((parent, view, position, id) ->{
+
             String nameText, webSiteText, idText;
 
             TextView idTv = view.findViewById(R.id.TextID);
@@ -85,21 +74,29 @@ public class MainActivity extends AppCompatActivity {
             TextView webSiteTv = view.findViewById(R.id.TextWebsite);
             webSiteText = webSiteTv.getText().toString();
 
-            ImageView image = view.findViewById(R.id.ItemImage);
-            Bitmap imageBm = ((BitmapDrawable)image.getDrawable()).getBitmap();
             setContentView(R.layout.edit_page);
 
+            ImageView image = view.findViewById(R.id.ItemImage);
+            Bitmap imageBm = ((BitmapDrawable)image.getDrawable()).getBitmap();
+
             TextInputLayout notEditID = findViewById(R.id.notEditID);
-            notEditID.getEditText().setText(idText);
+            //notEditID.getEditText().setText(idText);
+            edit_page.putExtra("notEditID",idText);
 
             TextInputLayout editName = findViewById(R.id.editName);
-            editName.getEditText().setText(nameText);
+            //editName.getEditText().setText(nameText);
+            edit_page.putExtra("editName",nameText);
 
             TextInputLayout editWebSite = findViewById(R.id.editWebsite);
-            editWebSite.getEditText().setText(webSiteText);
+            //editWebSite.getEditText().setText(webSiteText);
+            edit_page.putExtra("editWebSite",webSiteText);
 
             ImageView ivImage = findViewById(R.id.editPhoto);
-            ivImage.setImageBitmap(imageBm);
+            //ivImage.setImageBitmap(imageBm);
+            edit_page.putExtra("ivImage",imageBm);
+
+            startActivity(edit_page);
+        };
         });
     }
     public void goAddPage(View v){

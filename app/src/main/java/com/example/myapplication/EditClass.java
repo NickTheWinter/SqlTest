@@ -48,19 +48,29 @@ public class EditClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_page);
         Bundle arguments = getIntent().getExtras();
-        String _notEditId = arguments.get("notEditId").toString();
-        String _editName = arguments.get("editName").toString();
-        String _editWebsite = arguments.get("editWebsite").toString();
-        String _editPhoto = arguments.get("editPhoto").toString();
+
         notEditId = findViewById(R.id.notEditID);
         editName = findViewById(R.id.editName);
         editWebsite = findViewById(R.id.editWebsite);
         editPhoto = findViewById(R.id.editPhoto);
 
-        notEditId.getEditText().setText(_notEditId);
-        editName.getEditText().setText(_editName);
-        editWebsite.getEditText().setText(_editWebsite);
-        editPhoto.setImageBitmap(((ListItem)getBaseContext()).getImgBitmap(_editPhoto));
+        try {
+
+            String _notEditId = arguments.get("notEditId").toString();
+            String _editName = arguments.get("editName").toString();
+            String _editWebsite = arguments.get("editWebSite").toString();
+            Bitmap _editPhoto = (Bitmap)arguments.get("ivImage");
+
+            notEditId.getEditText().setText(_notEditId);
+            editName.getEditText().setText(_editName);
+            editWebsite.getEditText().setText(_editWebsite);
+            editPhoto.setImageBitmap(_editPhoto);
+        }
+        catch (Exception ex){
+            Log.e("",ex.getMessage());
+        }
+
+
 
         back = (Button) findViewById(R.id.backButton);
         edit = (Button) findViewById(R.id.editButton);
@@ -70,7 +80,7 @@ public class EditClass extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishIT();
+                setContentView(R.layout.activity_main);
             }
         });
         edit.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +116,7 @@ public class EditClass extends AppCompatActivity {
                     Statement statement = connect.createStatement();
                     ResultSet resultSet = statement.executeQuery(qu);
                     connect.close();
-                    finishIT();
+                    setContentView(R.layout.activity_main);
                 }
                 catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -115,7 +125,7 @@ public class EditClass extends AppCompatActivity {
             }
         });
 
-        ((ListItem)getBaseContext()).getImgBitmap(encodedImage);
+        //((ListItem)getBaseContext()).getImgBitmap(encodedImage);
     }
     //открытие
     public void ImageChoose(View v){
