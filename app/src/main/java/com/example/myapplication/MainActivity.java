@@ -18,6 +18,10 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.w3c.dom.Text;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     String ConnectionResult = "";
     Intent edit_page;
     ImageView imageView;
+    ProfileAdapter profileAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.ItemImage);
         edit_page = new Intent(MainActivity.this, EditClass.class);
         GetList(v);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+
+        //listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /*@Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListView listView = (ListView) adapterView;
 
@@ -55,21 +61,46 @@ public class MainActivity extends AppCompatActivity {
                 edit_page.putExtra("airPhoto",item.get("ItemImage").toString());
                 startActivity(edit_page);
             }
-        });
+        });*/
     }
     SimpleAdapter ad;
     public void GetList(View v){
         listView = (ListView)findViewById(R.id.list);
 
-        List<Map<Bitmap,Map<String,String>>> myDataList = null;
+        List<Profile> myDataList = null;
         ListItem MyData = new ListItem();
         myDataList = MyData.getList();
 
-        String[] FromTable = {"TextID","TextName","TextWebsite","ItemImage"};
-        int[] ToView = {R.id.TextID,R.id.TextName,R.id.TextWebsite, R.id.ItemImage};
+        profileAdapter = new ProfileAdapter(MainActivity.this,myDataList);
+        listView.setAdapter(profileAdapter);
+        listView.setOnItemClickListener((parent, view, position, id) ->{
+            String nameText, webSiteText, idText;
 
-        ad = new SimpleAdapter(MainActivity.this, myDataList,R.layout.table_list,FromTable,ToView);
-        listView.setAdapter(ad);
+            TextView idTv = view.findViewById(R.id.TextID);
+            idText = idTv.getText().toString();
+
+            TextView nameTv = view.findViewById(R.id.TextName);
+            nameText = nameTv.getText().toString();
+
+            TextView webSiteTv = view.findViewById(R.id.TextWebsite);
+            webSiteText = webSiteTv.getText().toString();
+
+            ImageView image = view.findViewById(R.id.ItemImage);
+            Bitmap imageBm = ((BitmapDrawable)image.getDrawable()).getBitmap();
+            setContentView(R.layout.edit_page);
+
+            TextInputLayout notEditID = findViewById(R.id.notEditID);
+            notEditID.getEditText().setText(idText);
+
+            TextInputLayout editName = findViewById(R.id.editName);
+            editName.getEditText().setText(nameText);
+
+            TextInputLayout editWebSite = findViewById(R.id.editWebsite);
+            editWebSite.getEditText().setText(webSiteText);
+
+            ImageView ivImage = findViewById(R.id.editPhoto);
+            ivImage.setImageBitmap(imageBm);
+        });
     }
     public void goAddPage(View v){
         startActivity(new Intent(MainActivity.this,AddPage.class));

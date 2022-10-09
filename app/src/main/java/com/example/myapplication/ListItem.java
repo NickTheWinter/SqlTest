@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
@@ -11,19 +12,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ListItem extends AppCompatActivity {
     Connection connection;
     String ConnectionResult = "";
     Boolean isSuccess = false;
-    List<Map<Bitmap,Map<String,String>>> data;
+    List<Profile> data;
 
-    public List<Map<Bitmap,Map<String,String>>> getList(){
+    public List<Profile> getList(){
         data = null;
-        data = new ArrayList<Map<Bitmap,Map<String,String>>>();
+        data = new ArrayList<Profile>();
         try{
             ConnectionHelper connectionHelper = new ConnectionHelper();
             connection = connectionHelper.Connection();
@@ -32,13 +35,9 @@ public class ListItem extends AppCompatActivity {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
                 while(resultSet.next()){
-                    Map<Bitmap,Map<String,String>> name = new HashMap<Bitmap,Map<String,String>>();
-                    Map<String,String> dtName =  new HashMap<String, String>();
-                    dtName.put("TextID",resultSet.getString("airline_id"));
-                    dtName.put("TextName",resultSet.getString("airline_name"));
-                    dtName.put("TextWebsite",resultSet.getString("airline_website"));
-                    name.put(((EditClass)getBaseContext()).getImgBitmap(resultSet.getString("image")),dtName);
-                    data.add(name);
+                    Bitmap bitmapImage = getImgBitmap(resultSet.getString("image"));
+                    //Bitmap bitmapImage = null;
+                    data.add(new Profile(resultSet.getString("airline_id"),resultSet.getString("airline_name"),resultSet.getString("airline_website"),bitmapImage));
                 }
                 ConnectionResult = "Success";
                 isSuccess = true;
@@ -54,5 +53,16 @@ public class ListItem extends AppCompatActivity {
             throwables.printStackTrace();
         }
         return data;
+    }
+    //Из строки в изображение
+    public Bitmap getImgBitmap(String encodedImg) {
+        if (encodedImg != null) {
+            byte[] bytes = new byte[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                bytes = Base64.getDecoder().decode(encodedImg);
+            }
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        }
+        return BitmapFactory.decodeResource(this.getResources(), R.drawable.darlinglogo);
     }
 }

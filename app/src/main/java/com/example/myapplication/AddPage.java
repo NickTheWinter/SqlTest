@@ -1,20 +1,27 @@
 package com.example.myapplication;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 
 import java.sql.SQLException;
@@ -24,10 +31,13 @@ import java.util.Base64;
 
 public class AddPage extends AppCompatActivity {
 
+    ImageView addPhoto;
+    String encodedImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.adding_page);
+        addPhoto = findViewById(R.id.addPhoto);
     }
 
     Connection connection;
@@ -36,9 +46,9 @@ public class AddPage extends AppCompatActivity {
     public void AddItems(View v){
         TextInputLayout editName = findViewById(R.id.addName);
         TextInputLayout editWebsite = findViewById(R.id.addWebsite);
-        ImageView addPhoto = findViewById(R.id.addPhoto);
 
-        String encodedImage = EncodeImage(((BitmapDrawable)addPhoto.getDrawable()).getBitmap());
+
+        encodedImage = EncodeImage(((BitmapDrawable)addPhoto.getDrawable()).getBitmap());
         if(!editName.getEditText().getText().toString().equals("") && !editWebsite.getEditText().getText().toString().equals("")){
             try{
                 ConnectionHelper connectionHelper = new ConnectionHelper();
@@ -65,7 +75,27 @@ public class AddPage extends AppCompatActivity {
             }
         }
     }
+    public void ImageChoose(View v){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        pickImg.launch(intent);
+    }
+    //отдельный метод для открытия
+    private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK) {
+            if (result.getData() != null) {
+                Uri uri = result.getData().getData();
+                try {
+                    InputStream is = getContentResolver().openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    addPhoto.setImageBitmap(bitmap);
+                    encodedImage = EncodeImage(bitmap);
+                } catch (Exception e) {
 
+                }
+            }
+        }
+    });
     public String EncodeImage(Bitmap bitmap) {
         int prevW = 150;
         int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();

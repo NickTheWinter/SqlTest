@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import android.content.Intent;
@@ -38,6 +39,10 @@ public class EditClass extends AppCompatActivity {
     Connection connect;
     ImageView editPhoto;
     String encodedImage;
+    Button back;
+    Button edit;
+    Button delete;
+    View v;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +60,62 @@ public class EditClass extends AppCompatActivity {
         notEditId.getEditText().setText(_notEditId);
         editName.getEditText().setText(_editName);
         editWebsite.getEditText().setText(_editWebsite);
-        editPhoto.setImageBitmap(getImgBitmap(_editPhoto));
+        editPhoto.setImageBitmap(((ListItem)getBaseContext()).getImgBitmap(_editPhoto));
+
+        back = (Button) findViewById(R.id.backButton);
+        edit = (Button) findViewById(R.id.editButton);
+        delete = (Button) findViewById(R.id.deleteButton);
 
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishIT();
+            }
+        });
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    ConnectionHelper connection = new ConnectionHelper();
+                    connect = connection.Connection();
+                    String qu = "update airlines set airline_name = \'" + Objects.requireNonNull(editName.getEditText().getText())
+                            + "\', airline_website = \'" + Objects.requireNonNull(editWebsite.getEditText()).getText()
+                            + "\', image = \'" + EncodeImage(((BitmapDrawable)editPhoto.getDrawable()).getBitmap())
+                            + "\' where airline_id = " + Integer.parseInt(notEditId.getEditText().getText().toString());
 
-        getImgBitmap(encodedImage);
+                    Statement statement = connect.createStatement();
+                    ResultSet resultSet = statement.executeQuery(qu);
+                    ((MainActivity)getBaseContext()).GetList(v);
+                    connect.close();
+                }
+                catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    Log.e("Error - ",throwables.getMessage());
+                }
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try{
+                    ConnectionHelper connection = new ConnectionHelper();
+                    connect = connection.Connection();
+                    String qu = "Delete from airlines where airline_id = " + Integer.parseInt(notEditId.getEditText().getText().toString());
+                    Statement statement = connect.createStatement();
+                    ResultSet resultSet = statement.executeQuery(qu);
+                    connect.close();
+                    finishIT();
+                }
+                catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    Log.e("Error - ",throwables.getMessage());
+                }
+            }
+        });
+
+        ((ListItem)getBaseContext()).getImgBitmap(encodedImage);
     }
     //открытие
     public void ImageChoose(View v){
@@ -84,17 +140,7 @@ public class EditClass extends AppCompatActivity {
         }
     });
 
-    //Из строки в изображение
-    public Bitmap getImgBitmap(String encodedImg) {
-        if (encodedImg != null) {
-            byte[] bytes = new byte[0];
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                bytes = Base64.getDecoder().decode(encodedImg);
-            }
-            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        }
-        return BitmapFactory.decodeResource(this.getResources(), R.drawable.darlinglogo);
-    }
+
     //Изображение в строку
     public String EncodeImage(Bitmap bitmap) {
         int prevW = 150;
@@ -108,37 +154,13 @@ public class EditClass extends AppCompatActivity {
         }
         return "";
     }
-    public void UpdateData(View v){
-        try{
-            ConnectionHelper connection = new ConnectionHelper();
-            connect = connection.Connection();
-            String qu = "update airlines set airline_name = \'" + Objects.requireNonNull(editName.getEditText().getText())
-                    + "\', airline_website = \'" + Objects.requireNonNull(editWebsite.getEditText()).getText()
-                    + "\', image = \'" + EncodeImage(((BitmapDrawable)editPhoto.getDrawable()).getBitmap())
-                    + "\' where airline_id = " + Integer.parseInt(notEditId.getEditText().getText().toString());
+    public void Delete(){
 
-            Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery(qu);
-            connect.close();
-        }
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Log.e("Error - ",throwables.getMessage());
-        }
     }
-    public void DeleteRow(View v){
-        try{
-            ConnectionHelper connection = new ConnectionHelper();
-            connect = connection.Connection();
-            String qu = "Delete from airlines where airline_id = " + Integer.parseInt(notEditId.getEditText().getText().toString());
-            Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery(qu);
-            connect.close();
-            this.finish();
-        }
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Log.e("Error - ",throwables.getMessage());
-        }
+    public void Update(){
+
+    }
+    public void finishIT(){
+        this.finish();
     }
 }
